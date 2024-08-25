@@ -1,0 +1,44 @@
+/* Container for the entire content */
+.container {
+  width: 60%; /* Further reduce the width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px; /* Set a smaller maximum width */
+  margin: 0 auto; /* Center align the container */
+  padding: 20px;
+}
+
+/* Ensure tables do not exceed container width */
+.container table {
+  width: 60%; /* Ensure tables take up full width of container */
+  border-collapse: collapse;
+  margin: 10px 0; /* Spacing between tables */
+  table-layout: fixed; /* Ensure table columns do not exceed container width */
+}
+
+/* Styling for table headers */
+.container th {
+  background-color: #f2f2f2;
+  padding: 8px; /* Slightly smaller padding */
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Styling for table cells */
+.container td {
+  padding: 8px; /* Slightly smaller padding */
+  border: 1px solid #ddd;
+}
+
+/* Ensure tables in smallcontainer are aligned side by side and have equal width */
+.smallcontainer {
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Add gap between tables */
+}
+
+.smallcontainer table {
+  width: 48%; /* Adjust to fit side by side with some margin */
+}
