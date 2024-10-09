@@ -31,10 +31,18 @@ app.post('/upload', upload.single('file'), (req, res) => {
         const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
         const sheetName = workbook.SheetNames[0]; // Get the first sheet
         const sheet = workbook.Sheets[sheetName]; // Get the sheet
-        employeeData = xlsx.utils.sheet_to_json(sheet); // Convert to JSON
-        // console.log(employeeData);
+        excelData = xlsx.utils.sheet_to_json(sheet); // Convert to JSON
+        excelData = excelData.map(row => {
+            if (row['Date Of Joining'] !== undefined) {
+                const baseDate = new Date(1970, 0, 1); // January 1, 1970
+                const joiningDate = new Date(baseDate.getTime() + row['Date Of Joining'] * 24 * 60 * 60 * 1000);
+                const formattedDate = joiningDate.toLocaleDateString('en-GB'); // Format as DD-MM-YYYY
+                return { ...row, 'Date Of Joining': formattedDate }; // Return new object with formatted date
+            }
+            return row; // Return original row if date doesn't exist
+        });        
 
-        res.json({ message: 'File uploaded and data processed successfully' }); // Send success message
+        res.json({ message: 'File uploaded and data processed successfully',data:excelData }); // Send success message
     } catch (error) {
         res.status(500).send('Error processing file');
     }
@@ -45,8 +53,8 @@ app.get('/employee/:id', async(req, res) => {
     const { id } = req.params;
     console.log(id);
     // console.log(employeeData)
-    const employee = await employeeData.find(emp => String(emp['Employee Code']) === String(id));
-    console.log('Found Employee:', employee);
+    const employee = await excelData.find(emp => String(emp['Employee Code']) === String(id));
+    console.log(employee);
     if (employee) {
         res.json(employee);
     } else {

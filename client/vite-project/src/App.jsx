@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './App.css'; // Ensure this path is correct
 
+
 const App = () => {
     const [file, setFile] = useState(null);
     const [employeeId, setEmployeeId] = useState('');
     const [employeeData, setEmployeeData] = useState(null);
     const [message, setMessage] = useState('');
+    const [excelData, setExcelData] = useState([]);
 
     // Handle file selection
     const handleFileChange = (event) => {
@@ -66,6 +68,7 @@ const App = () => {
 
             const result = await res.json();
             setMessage(result.message);
+            setExcelData(result.data);
             setEmployeeData(null); // Clear employee data when new file is uploaded
         } catch (error) {
             console.error('Error:', error);
@@ -231,6 +234,44 @@ const App = () => {
                     </div>
                 )}
             </div>
+
+            <div>
+    {excelData.length === 0 ? (
+        <p className="text-center text-gray-500">No Excel sheet has been uploaded.</p>
+    ) : (
+        <div>
+            <h2 className="text-lg font-bold mb-4 text-center">Uploaded Data:</h2>
+            <div className="max-w-4xl mx-auto overflow-x-auto">
+                <table className="min-w-full border-collapse bg-white shadow-md">
+                    <thead>
+                        <tr>
+                            {Object.keys(excelData[0]).map((key) => (
+                                <th key={key} className="w-96 px-6 py-4 border-black border-2 text-left text-black font-bold">
+                                    {key}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {excelData.map((row, index) => (
+                            <tr key={index} className="hover:bg-gray-100">
+                                {Object.values(row).map((value, i) => (
+                                    <td key={i} className="w-96 px-6 py-4 border-2 border-black text-gray-600">
+                                        {value}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )}
+</div>
+
+
+
+
         </div>
     );
 }
